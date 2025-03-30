@@ -1,4 +1,4 @@
-const API_URL = 'https://viatelecom.vercel.app/';
+import { API_URL } from './config.js';
 
 async function getCidades() {
     try {
