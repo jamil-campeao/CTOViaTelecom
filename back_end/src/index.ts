@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import express, {Request, Response} from 'express';
 import cors from 'cors';
+import { create } from 'domain';
 
 
 const prisma = new PrismaClient();
@@ -67,6 +68,7 @@ app.get('/tecnicos', async (req: Request, res: Response) => {
     }
 });
 
+// Rota para cadastrar técnico
 app.post('/tecnicos', async (req: Request, res: Response) => {
     const { nome, situacao} = req.body;
     // Validações
@@ -87,6 +89,48 @@ app.post('/tecnicos', async (req: Request, res: Response) => {
     catch (error) {
         console.error('Erro ao criar técnico:', error);
         res.status(500).json({ error: 'Erro ao criar técnico'});
+    }
+});
+
+//Rota para listar dados do ultimo CTO lançado
+app.get('/ultimocadastro', async (req: Request, res: Response) => {
+    try {
+        const cto = await prisma.cTO.findMany({
+            orderBy: {
+                CTO_CODIGO: 'desc'
+            },
+            take: 1
+        });
+    }
+    catch (error) {
+        console.error('Erro ao buscar último CTO:', error);
+        res.status(500).json({ error: 'Erro ao buscar último CTO' });
+    }
+});
+
+// Rota para cadastrar CTO
+app.post('/ctos', async (req: Request, res: Response) => {
+    try {
+        const {codigoTecnico, codigoCidade, dataCto, hora} = req.body;
+
+        //Validações
+        if (!codigoTecnico || !codigoCidade || !dataCto || !hora) {
+            res.status(400).json({ error: 'Código do técnico, código da cidade, data e hora são obrigatórios' });
+            return;
+        }
+
+        const cto = await prisma.cTO.create({
+            data: {
+                TEC_CODIGO: codigoTecnico,
+                CID_CODIGO: codigoCidade,
+                CTO_DATA: dataCto
+            }
+        });
+
+    }
+    catch (error) {
+        console.error('Erro ao criar CTO:', error);
+        res.status(500).json({ error: 'Erro ao criar CTO'});
     }
 });
 
