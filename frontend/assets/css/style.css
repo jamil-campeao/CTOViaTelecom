@@ -1,0 +1,105 @@
+        /* Estilo básico para a página */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(to right, #0062ff, #67ff0f);
+            color: #000;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        label, p {
+            margin-top: 10px;
+        }
+        .input-group {
+            margin-top: 10px;
+        }
+        .input-group label {
+            display: block;
+            font-weight: bold;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #000;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #e0f7fa;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .result-box h3 {
+            font-size: 1.5em;
+            color: #045199;
+            text-align: center;
+        }
+        .result-box p {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+        .result-box p span {
+            font-weight: bold;
+            color: #004d40;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                border-radius: 8px;
+            }
+            .btn {
+                width: 100%;
+                padding: 12px;
+            }
+            .result-box {
+                padding: 15px;
+                border-radius: 8px;
+            }
+        }
+
+        select {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            font-size: 16px;
+            width: 100%;
+            color: black;
+          }
+
+        select option {
+        color: #000 !important;
+        background-color: #fff !important;
+        }
+
+        select:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 4px rgba(0,123,255,0.3);
+        }
+        
