@@ -12,12 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postTecnico = exports.getTecnicos = void 0;
+exports.getTodosTecnicos = exports.putTecnico = exports.postTecnico = exports.getTecnicos = void 0;
 const client_1 = __importDefault(require("../db/client"));
 // Rota para listar técnicos
 const getTecnicos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tecnicos = yield client_1.default.tecnico.findMany();
+        const tecnicos = yield client_1.default.tecnico.findMany({
+            where: {
+                TEC_SITUACAO: 1 // Situação ativa
+            }
+        });
         res.json(tecnicos);
     }
     catch (error) {
@@ -50,3 +54,48 @@ const postTecnico = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.postTecnico = postTecnico;
+const putTecnico = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { situacao } = req.body;
+    // Validações
+    if (!situacao) {
+        res.status(400).json({ error: 'situação não informada' });
+        return;
+    }
+    let situacaoInt;
+    if (situacao == "Ativo") {
+        situacaoInt = 1;
+    }
+    else {
+        situacaoInt = 0;
+    }
+    try {
+        const tecnico = yield client_1.default.tecnico.update({
+            where: { TEC_CODIGO: Number(id) },
+            data: {
+                TEC_SITUACAO: situacaoInt
+            }
+        });
+        res.status(201).json({ sucess: true, message: 'Técnico atualizado com sucesso', tecnico });
+    }
+    catch (error) {
+        console.error('Erro ao atualizar técnico:', error);
+        res.status(500).json({ error: 'Erro ao atualizar técnico' });
+    }
+});
+exports.putTecnico = putTecnico;
+const getTodosTecnicos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const tecnicos = yield client_1.default.tecnico.findMany({
+            orderBy: {
+                TEC_NOME: 'asc'
+            }
+        });
+        res.json(tecnicos);
+    }
+    catch (error) {
+        console.error('Erro ao buscar técnicos:', error);
+        res.status(500).json({ error: 'Erro ao buscar técnicos' });
+    }
+});
+exports.getTodosTecnicos = getTodosTecnicos;

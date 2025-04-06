@@ -34,4 +34,15 @@ function formatarDataParaTimestamp(dataInput) {
     return `${ano}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
 }
 
-export { formatarDataParaTimestamp, formatadaDataRecebida };
+function gerarSenhaDiaria() {
+    const hoje = new Date();
+    const dia = String(hoje.getDate()).padStart(2, '0');
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+    const base = "ViaT#";
+  
+    const senha = `${base}${dia}${mes}`;
+    return senha;
+  }
+  
+
+export { formatarDataParaTimestamp, formatadaDataRecebida, gerarSenhaDiaria };

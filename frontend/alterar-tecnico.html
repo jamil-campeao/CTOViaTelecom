@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Técnico</title>
+    <title>Alterar Técnico</title>
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
     <div class="container">
-        <h2>Cadastro de Técnico</h2>
-        <form id="formCadastroTecnico">
+        <h2>Alterar Técnico</h2>
+        <form id="formAlterarTecnico">
             <div class="input-group">
-                <label for="nomeTecnico">Nome do Técnico:</label>
-                <input type="text" id="nomeTecnico" placeholder="Digite o nome do técnico" maxlength="50" required>
+                <label for="descricao">Técnico:</label>
+                <select id="descricao_tecnico">
+                <option value="">Selecione um técnico</option>
+                </select>
             </div>
             <div class="input-group">
                 <label for="situacaoTecnico">Situação:</label>
@@ -22,7 +24,7 @@
                     <option value="0">Inativo</option>
                 </select>
             </div>
-            <button type="submit" id="btnSalvarTecnico" class="btn">Salvar</button>
+            <button type="submit" id="btnSalvarAlterarTecnico" class="btn">Salvar</button>
         </form>
         <div id="mensagem" class="mensagem"></div>
     </div>
