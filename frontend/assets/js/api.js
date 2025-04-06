@@ -191,7 +191,7 @@ async function postCidade (nomeCidade, cepCidade, ufCidade, ibgeCidade) {
 };
 
 async function putTecnicos(tecnicoCodigo, situacaoTecnico) {
-    try {       
+    try {        
         const response = await fetch(`${API_URL}tecnicos/${tecnicoCodigo}`, {
             method: 'PUT',
             headers: {
@@ -204,15 +204,16 @@ async function putTecnicos(tecnicoCodigo, situacaoTecnico) {
 
         if (response.ok) {
             const result = await response.json();
+            console.log("Técnico atualizado com sucesso:", result);
             return result;
         } else {
-            throw new Error('Erro ao atualizar técnico: ' + response.statusText);
+            throw new Error(`Erro ao atualizar técnico: ${response.status} - ${response.statusText}`);
         }
     } catch (error) {
         console.error('Erro ao atualizar técnico:', error);
         throw error;
     }
-}
+};
 
 async function getTodosTecnicos() {
     try {

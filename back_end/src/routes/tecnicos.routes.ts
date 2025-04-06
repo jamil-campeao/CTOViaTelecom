@@ -3,9 +3,9 @@ import { getTecnicos, postTecnico, putTecnico, getTodosTecnicos } from '../contr
 
 const router = Router();
 
-router.get('/todos', getTodosTecnicos); // Rota para obter todos os técnicos
-router.put('/:id', putTecnico);
+router.get('/todos', getTodosTecnicos);
 router.get('/', getTecnicos);
 router.post('/', postTecnico);
+router.put('/:id', putTecnico);
 
 export default router;

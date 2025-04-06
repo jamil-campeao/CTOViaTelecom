@@ -54,8 +54,14 @@ export const putTecnico = async (req: Request, res: Response) => {
         res.status(400).json({ error: 'situação não informada' });
         return;
     }
+    let situacaoInt;
 
-    let situacaoInt = parseInt(situacao);
+    if (situacao == "Ativo") {
+        situacaoInt = 1;
+    }
+    else {
+        situacaoInt = 0;
+    }
 
     try {
         const tecnico = await prisma.tecnico.update({

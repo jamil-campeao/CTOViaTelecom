@@ -62,7 +62,13 @@ const putTecnico = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(400).json({ error: 'situação não informada' });
         return;
     }
-    let situacaoInt = parseInt(situacao);
+    let situacaoInt;
+    if (situacao == "Ativo") {
+        situacaoInt = 1;
+    }
+    else {
+        situacaoInt = 0;
+    }
     try {
         const tecnico = yield client_1.default.tecnico.update({
             where: { TEC_CODIGO: Number(id) },
