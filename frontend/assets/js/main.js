@@ -1,9 +1,10 @@
-import { getTecnicos, getCidades, postCTO, getUltimoCTO, postTecnico } from './api.js';
+import { getTecnicos, getCidades, postCTO, getUltimoCTO, postTecnico, putTecnicos, getTodosTecnicos } from './api.js';
 import { formatarDataParaTimestamp, formatadaDataRecebida } from '../../utils/helpers.js';
 
 const formHome = document.getElementById('home');
 const formAlterarTecnico = document.getElementById('formAlterarTecnico');
 const formCadastroTecnico = document.getElementById('formCadastroTecnico');
+const formConsultaCTO = document.getElementById('formConsultaCTO');
 
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -162,21 +163,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
             // Carrega os técnicos e preenche a combo box
-            const tecnicos = await getTecnicos();
+            const tecnicos = await getTodosTecnicos();
 
             tecnicos.forEach(tecnico => {
-                const option = document.createElement('option');
-                option.value = tecnico.id; // Define o ID do técnico como valor
-                option.textContent = tecnico.nome; // Define o nome do técnico como texto
-                option.dataset.situacao = tecnico.situacao; // Armazena a situação no atributo data
+                const option = document.createElement('option');                
+                option.value = tecnico.id;
+                option.textContent = tecnico.nome;
+                option.dataset.situacao = tecnico.situacao; // Armazena a situação no atributo 
                 selectTecnico.appendChild(option);
             });
+
 
             // Adiciona o evento para preencher a situação ao selecionar um técnico
             selectTecnico.addEventListener('change', (event) => {
                 const tecnicoSelecionado = event.target.selectedOptions[0]; // Obtém a opção selecionada
                 const situacao = tecnicoSelecionado.dataset.situacao; // Obtém a situação do técnico
-
                 if (situacao !== undefined) {
                     selectSituacaoTecnico.value = situacao; // Define a situação no campo
                 } else {
@@ -191,56 +192,60 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const formCadastroCidade = document.getElementById("formCadastroCidade");
-    const cepInput = document.getElementById("cepCidade");
-
-    // Formata o CEP enquanto o usuário digita
-    cepInput.addEventListener("input", (event) => {
-        let cep = event.target.value.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
-        if (cep.length > 5) {
-            cep = cep.slice(0, 5) + "-" + cep.slice(5, 8); // Adiciona o traço após os 5 primeiros dígitos
-        }
-        event.target.value = cep; // Atualiza o valor do campo com a formatação
-    });
-
+    
     if (formCadastroCidade) {
+        const cepInput = document.getElementById("cepCidade");
+
+        // Formata o CEP enquanto o usuário digita
+        cepInput.addEventListener("input", (event) => {
+            let cep = event.target.value.replace(/\D/g, ""); // Remove não numéricos
+            if (cep.length > 5) {
+                cep = cep.slice(0, 5) + "-" + cep.slice(5, 8);
+            }
+            event.target.value = cep;
+        });
+
         formCadastroCidade.addEventListener("submit", async (event) => {
             event.preventDefault();
 
             const nomeCidade = document.getElementById("nomeCidade").value;
-            const cepCidade = document.getElementById("cepCidade").value.replace("-", ""); // Remove o traço antes de enviar
+            const cepCidade = document.getElementById("cepCidade").value.replace("-", "");
             const ufCidade = document.getElementById("ufCidade").value;
 
-            // Validações
             if (!nomeCidade || !cepCidade || !ufCidade) {
                 alert("Preencha todos os campos antes de salvar.");
                 return;
             }
 
-            try {
-                const response = await fetch("http://sua-api.com/cidades", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        nome: nomeCidade,
-                        cep: cepCidade,
-                        uf: ufCidade,
-                    }),
-                });
-
-                if (response.ok) {
-                    alert("Cidade cadastrada com sucesso!");
-                    formCadastroCidade.reset();
-                } else {
-                    alert("Erro ao cadastrar cidade.");
-                }
-            } catch (error) {
-                console.error("Erro ao cadastrar cidade:", error);
-                alert("Erro ao cadastrar cidade.");
-            }
+            // Aqui você pode mandar o fetch/post ou o que quiser
+            console.log("Dados válidos:", { nomeCidade, cepCidade, ufCidade });
         });
     }
 });
 
 
+document.addEventListener("DOMContentLoaded", () => {
+    if (formAlterarTecnico) { 
+        const btnSalvar = document.getElementById('btnSalvarAlterarTecnico');
+
+        btnSalvar.addEventListener("click", async () => {
+            const tecnicoCodigo = document.getElementById("descricao_tecnico").value;
+            const situacaoTecnico = document.getElementById("situacaoTecnico").value;           
+
+            // Validações
+            if (!tecnicoCodigo || !situacaoTecnico) {
+                alert("Preencha todos os campos antes de salvar.");
+                return;
+            }
+
+            try {
+                const resposta = await putTecnicos(tecnicoCodigo, situacaoTecnico);
+                console.log("Técnico atualizado com sucesso:", resposta);
+                alert("Técnico salvo com sucesso!");
+            } catch (error) {
+                console.error("Erro ao atualizar técnico:", error);
+                alert("Erro ao atualizar técnico." + error);
+            }
+        });
+    }
+});

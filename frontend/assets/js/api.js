@@ -191,9 +191,8 @@ async function postCidade (nomeCidade, cepCidade, ufCidade, ibgeCidade) {
 };
 
 async function putTecnicos(tecnicoCodigo, situacaoTecnico) {
-
-    try {
-        const response = await fetch(API_URL + 'tecnicos/' + tecnicoCodigo, {
+    try {       
+        const response = await fetch(`${API_URL}tecnicos/${tecnicoCodigo}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -215,5 +214,30 @@ async function putTecnicos(tecnicoCodigo, situacaoTecnico) {
     }
 }
 
+async function getTodosTecnicos() {
+    try {
+        const response = await fetch(API_URL + 'tecnicos/todos', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
 
-export { getCidades, getTecnicos, postCTO, getUltimoCTO, postTecnico, getCTOByID, postCidade, putTecnicos };
+        if (response.ok) {
+            const result = await response.json();
+            return result.map(tecnico => ({
+                id: tecnico.TEC_CODIGO,
+                nome: tecnico.TEC_NOME,
+                situacao: tecnico.TEC_SITUACAO
+            }));
+        } else {
+            throw new Error('Erro ao carregar técnicos: ' + response.statusText);
+        }
+    } catch (error) {
+        console.error('Erro ao carregar técnicos:', error);
+        throw error;
+    }
+}
+
+
+export { getCidades, getTecnicos, postCTO, getUltimoCTO, postTecnico, getCTOByID, postCidade, putTecnicos, getTodosTecnicos };

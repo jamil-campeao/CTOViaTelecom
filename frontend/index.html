@@ -48,6 +48,35 @@
             <p id="cidade"><span>Cidade:</span> Nenhuma cidade armazenada ainda.</p>
         </div>
     </div>
+    <script type="module">
+        import { gerarSenhaDiaria } from "./utils/helpers.js";
+        const senhaAdmin = gerarSenhaDiaria();
+    
+        const menuLinks = document.querySelectorAll(".menu a");
+    
+        menuLinks.forEach(link => {
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+    
+                // Verifica se o link é para "Consultar CTOs"
+                if (link.href.includes("consultar-ctos.html")) {
+                    // Redireciona diretamente para a página de consulta
+                    window.location.href = link.href;
+                    return;
+                }
+
+                const senha = prompt("Digite a senha de administrador para acessar esta página:");
+    
+                // Verifica se a senha está correta
+                if (senha === senhaAdmin) {
+                    // Redireciona para o link se a senha estiver correta
+                    window.location.href = link.href;
+                } else {
+                    alert("Senha incorreta! Acesso negado.");
+                }
+            });
+        });
+    </script>
 
     <script type="module" src="./assets/js/main.js"></script>
 </body>

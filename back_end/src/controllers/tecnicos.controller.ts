@@ -65,9 +65,23 @@ export const putTecnico = async (req: Request, res: Response) => {
             }
         });
 
-        res.json(tecnico);
+        res.status(201).json({sucess: true, message: 'Técnico atualizado com sucesso', tecnico});
     } catch (error) {
         console.error('Erro ao atualizar técnico:', error);
         res.status(500).json({ error: 'Erro ao atualizar técnico' });
+    }
+};
+
+export const getTodosTecnicos = async (req: Request, res: Response) => {
+    try {
+        const tecnicos = await prisma.tecnico.findMany({
+            orderBy: {
+                TEC_NOME: 'asc'
+            }
+        });
+        res.json(tecnicos);
+    } catch (error) {
+        console.error('Erro ao buscar técnicos:', error);
+        res.status(500).json({ error: 'Erro ao buscar técnicos' });
     }
 };

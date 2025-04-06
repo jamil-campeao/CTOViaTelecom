@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postCTO = exports.getUltimoCTO = void 0;
+exports.getCTOByID = exports.postCTO = exports.getUltimoCTO = void 0;
 const client_1 = __importDefault(require("../db/client"));
 //Rota para listar dados do ultimo CTO lançado
 const getUltimoCTO = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -81,3 +81,43 @@ const postCTO = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.postCTO = postCTO;
+const getCTOByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c;
+    const { id } = req.params;
+    try {
+        const cto = yield client_1.default.cTO.findUnique({
+            where: { CTO_CODIGO: Number(id) },
+            include: {
+                tecnico: {
+                    select: {
+                        TEC_NOME: true
+                    }
+                },
+                cidade: { select: {
+                        CID_NOME: true,
+                        CID_UF: true
+                    } }
+            }
+        });
+        if (cto) {
+            const JSONFormatado = {
+                CTO_CODIGO: cto.CTO_CODIGO,
+                TEC_CODIGO: cto.TEC_CODIGO,
+                TEC_NOME: ((_a = cto.tecnico) === null || _a === void 0 ? void 0 : _a.TEC_NOME) || null,
+                CTO_DATA: cto.CTO_DATA,
+                CID_CODIGO: cto.CID_CODIGO,
+                CID_NOME: ((_b = cto.cidade) === null || _b === void 0 ? void 0 : _b.CID_NOME) || null,
+                CID_UF: ((_c = cto.cidade) === null || _c === void 0 ? void 0 : _c.CID_UF) || null
+            };
+            res.json(JSONFormatado);
+        }
+        else {
+            res.status(404).json({ error: 'CTO não encontrado' });
+        }
+    }
+    catch (error) {
+        console.error('Erro ao buscar CTO:', error);
+        res.status(500).json({ error: 'Erro ao buscar CTO' });
+    }
+});
+exports.getCTOByID = getCTOByID;

@@ -35,6 +35,13 @@ const postCidade = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(400).json({ error: 'Nome, estado e código IBGE são obrigatórios' });
         return;
     }
+    const codigoIBGEExiste = yield client_1.default.cidade.findFirstOrThrow({
+        where: { CID_IBGE: cod_ibge } // Verifica se o código IBGE já existe
+    });
+    if (codigoIBGEExiste) {
+        res.status(400).json({ error: 'Código IBGE já cadastrado' });
+        return;
+    }
     try {
         const cidade = yield client_1.default.cidade.create({
             data: {
