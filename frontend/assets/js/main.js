@@ -1,38 +1,43 @@
 import { getTecnicos, getCidades, postCTO, getUltimoCTO, postTecnico } from './api.js';
 import { formatarDataParaTimestamp, formatadaDataRecebida } from '../../utils/helpers.js';
 
+const formHome = document.getElementById('home');
+const formAlterarTecnico = document.getElementById('formAlterarTecnico');
+const formCadastroTecnico = document.getElementById('formCadastroTecnico');
+
 
 document.addEventListener("DOMContentLoaded", async () => {
-    if (window.location.pathname.endsWith("index.html") || window.location.pathname === "/") {
+    if (formHome) {
         const select = document.getElementById('descricao_tecnico');
 
         try {
-            const tecnicos = await getTecnicos();            
+            const tecnicos = await getTecnicos(); 
 
             tecnicos.forEach(tecnico => {
                 const option = document.createElement('option');
                 option.value = tecnico.id;
                 option.textContent = tecnico.nome;
+                option.dataset.situacao = tecnico.situacao;
                 select.appendChild(option);
             });
         } catch (error) {
             console.error("Erro ao carregar técnicos:", error);
             alert("Erro ao carregar técnicos.");
         }
-}
+    }
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-    if (window.location.pathname.endsWith("index.html")) {
+    if (formHome) {
         const select = document.getElementById('nome_cidade');
 
         try {
-            const cidades = await getCidades();
+            const cidades = await getCidades();            
 
             cidades.forEach(cidade => {
                 const option = document.createElement('option');
                 option.value = cidade.id;
-                option.textContent = cidade.nome;
+                option.textContent = cidade.nome + ' - ' + cidade.uf;
                 select.appendChild(option);
             });
         } catch (error) {
@@ -43,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (window.location.pathname.endsWith("index.html")) {
+    if (formHome) {
         const btnSalvar = document.getElementById('btnSalvarCTO');
 
         btnSalvar.addEventListener("click", async () => {
@@ -60,17 +65,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
                 const resposta = await postCTO(tecnicoCodigo, cidade, dataFormatada);
-                console.log("CTO salvo com sucesso:", resposta);
                 alert("CTO salvo com sucesso!");
+                carregarUltimoCTO(); // Atualiza a exibição do último CTO
             } catch (error) {
-                console.error("Erro ao salvar CTO:", error);
                 alert("Erro ao salvar CTO.");
             }
         });
-}
+    }
 });
 
-if (window.location.pathname.endsWith("index.html")) {
+if (formHome)  {
     document.addEventListener("DOMContentLoaded", carregarUltimoCTO);
 }
 
@@ -126,7 +130,7 @@ async function carregarUltimoCTO() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (window.location.pathname.endsWith("tecnico.html")) {
+    if (formCadastroTecnico) { 
         const btnSalvar = document.getElementById('btnSalvarTecnico');
 
         btnSalvar.addEventListener("click", async () => {
@@ -151,40 +155,92 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 });
 
+document.addEventListener("DOMContentLoaded", async () => {
+    if (formAlterarTecnico) {
+        const selectTecnico = document.getElementById('descricao_tecnico');
+        const selectSituacaoTecnico = document.getElementById('situacaoTecnico');
 
-//Função para salvar dados no  (Forma antiga)
-function salvarDados() {
-    const numero = document.getElementById('numero').value;
-    const descricao = document.getElementById('descricao').value;
-    const data = document.getElementById('data').value;
-    const cidade = document.getElementById('cidade').value;
+        try {
+            // Carrega os técnicos e preenche a combo box
+            const tecnicos = await getTecnicos();
 
-    if (numero && descricao && data && cidade) {
-        localStorage.setItem('numero', numero);
-        localStorage.setItem('descricao', descricao);
-        localStorage.setItem('data', data);
-        localStorage.setItem('cidade', cidade);
+            tecnicos.forEach(tecnico => {
+                const option = document.createElement('option');
+                option.value = tecnico.id; // Define o ID do técnico como valor
+                option.textContent = tecnico.nome; // Define o nome do técnico como texto
+                option.dataset.situacao = tecnico.situacao; // Armazena a situação no atributo data
+                selectTecnico.appendChild(option);
+            });
 
-        carregarDados(); // Atualizar a exibição dos dados
-        alert("Dados salvos com sucesso!");
-    } else {
-        alert("Por favor, preencha todos os campos.");
+            // Adiciona o evento para preencher a situação ao selecionar um técnico
+            selectTecnico.addEventListener('change', (event) => {
+                const tecnicoSelecionado = event.target.selectedOptions[0]; // Obtém a opção selecionada
+                const situacao = tecnicoSelecionado.dataset.situacao; // Obtém a situação do técnico
+
+                if (situacao !== undefined) {
+                    selectSituacaoTecnico.value = situacao; // Define a situação no campo
+                } else {
+                    selectSituacaoTecnico.value = ""; // Reseta o campo se nenhum técnico for selecionado
+                }
+            });
+        } catch (error) {
+            alert("Erro ao carregar técnicos.");
+        }
     }
-}
+});
 
-// Função para carregar dados do localStorage (Forma antiga)
-function carregarDados() {
-    const numero = localStorage.getItem('numero');
-    const descricao = localStorage.getItem('descricao');
-    const data = localStorage.getItem('data');
-    const cidade = localStorage.getItem('cidade');
+document.addEventListener("DOMContentLoaded", () => {
+    const formCadastroCidade = document.getElementById("formCadastroCidade");
+    const cepInput = document.getElementById("cepCidade");
 
-    if (numero && descricao && data && cidade) {
-        document.getElementById('numeroArmazenado').innerText = "Número: " + numero;
-        document.getElementById('descricaoArmazenada').innerText = "Feito por: " + descricao;
-        document.getElementById('dataArmazenada').innerText = "Data: " + data;
-        document.getElementById('cidadeArmazenada').innerText = "Cidade: " + cidade;
+    // Formata o CEP enquanto o usuário digita
+    cepInput.addEventListener("input", (event) => {
+        let cep = event.target.value.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
+        if (cep.length > 5) {
+            cep = cep.slice(0, 5) + "-" + cep.slice(5, 8); // Adiciona o traço após os 5 primeiros dígitos
+        }
+        event.target.value = cep; // Atualiza o valor do campo com a formatação
+    });
+
+    if (formCadastroCidade) {
+        formCadastroCidade.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const nomeCidade = document.getElementById("nomeCidade").value;
+            const cepCidade = document.getElementById("cepCidade").value.replace("-", ""); // Remove o traço antes de enviar
+            const ufCidade = document.getElementById("ufCidade").value;
+
+            // Validações
+            if (!nomeCidade || !cepCidade || !ufCidade) {
+                alert("Preencha todos os campos antes de salvar.");
+                return;
+            }
+
+            try {
+                const response = await fetch("http://sua-api.com/cidades", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        nome: nomeCidade,
+                        cep: cepCidade,
+                        uf: ufCidade,
+                    }),
+                });
+
+                if (response.ok) {
+                    alert("Cidade cadastrada com sucesso!");
+                    formCadastroCidade.reset();
+                } else {
+                    alert("Erro ao cadastrar cidade.");
+                }
+            } catch (error) {
+                console.error("Erro ao cadastrar cidade:", error);
+                alert("Erro ao cadastrar cidade.");
+            }
+        });
     }
-}
+});
 
 

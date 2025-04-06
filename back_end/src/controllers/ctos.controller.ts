@@ -70,3 +70,41 @@ export const postCTO = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Erro ao criar CTO'});
     }
 };
+
+export const getCTOByID = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        const cto = await prisma.cTO.findUnique({
+            where: { CTO_CODIGO: Number(id) },
+            include: {
+                tecnico: {
+                    select: {
+                        TEC_NOME: true
+                    }},
+                cidade: {select: {
+                    CID_NOME: true,
+                    CID_UF: true
+                }}
+            }
+        });
+
+        if (cto) {
+            const JSONFormatado = {
+                CTO_CODIGO: cto.CTO_CODIGO,
+                TEC_CODIGO: cto.TEC_CODIGO,
+                TEC_NOME: cto.tecnico?.TEC_NOME || null,
+                CTO_DATA: cto.CTO_DATA,
+                CID_CODIGO: cto.CID_CODIGO,
+                CID_NOME: cto.cidade?.CID_NOME || null,
+                CID_UF: cto.cidade?.CID_UF || null
+            };
+            res.json(JSONFormatado);
+        } else {
+            res.status(404).json({ error: 'CTO não encontrado' });
+        }
+    } catch (error) {
+        console.error('Erro ao buscar CTO:', error);
+        res.status(500).json({ error: 'Erro ao buscar CTO' });
+    }
+};

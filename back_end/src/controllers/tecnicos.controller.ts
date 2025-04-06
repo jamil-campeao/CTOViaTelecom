@@ -4,7 +4,10 @@ import prisma from '../db/client';
 // Rota para listar técnicos
 export const getTecnicos =  async (req: Request, res: Response) => {
     try {
-        const tecnicos = await prisma.tecnico.findMany();
+        const tecnicos = await prisma.tecnico.findMany({
+            where : {
+                TEC_SITUACAO: 1 // Situação ativa
+        }});
         res.json(tecnicos);
     }
     catch (error) {
@@ -39,5 +42,32 @@ export const postTecnico =  async (req: Request, res: Response) => {
     catch (error) {
         console.error('Erro ao criar técnico:', error);
         res.status(500).json({ error: 'Erro ao criar técnico'});
+    }
+};
+
+export const putTecnico = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { situacao } = req.body;
+
+    // Validações
+    if (!situacao) {
+        res.status(400).json({ error: 'situação não informada' });
+        return;
+    }
+
+    let situacaoInt = parseInt(situacao);
+
+    try {
+        const tecnico = await prisma.tecnico.update({
+            where: { TEC_CODIGO: Number(id) },
+            data: {
+                TEC_SITUACAO: situacaoInt
+            }
+        });
+
+        res.json(tecnico);
+    } catch (error) {
+        console.error('Erro ao atualizar técnico:', error);
+        res.status(500).json({ error: 'Erro ao atualizar técnico' });
     }
 };

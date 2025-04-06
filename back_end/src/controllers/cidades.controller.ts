@@ -22,6 +22,16 @@ export const postCidade = async (req: Request, res: Response) => {
         res.status(400).json({ error: 'Nome, estado e código IBGE são obrigatórios' });
         return;
     }
+
+    const codigoIBGEExiste = await prisma.cidade.findFirstOrThrow({
+        where: { CID_IBGE: cod_ibge } // Verifica se o código IBGE já existe
+    });
+
+    if (codigoIBGEExiste) {
+        res.status(400).json({ error: 'Código IBGE já cadastrado' });
+        return;
+    }
+
     try {
         const cidade = await prisma.cidade.create({
             data: {

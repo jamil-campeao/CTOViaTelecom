@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Número de CTO</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Consulta de Número de CTO</h2>
+        <form id="formConsultaCTO">
+            <div class="input-group">
+                <label for="numeroCTO">Número da CTO:</label>
+                <input type="text" id="numeroCTO" placeholder="Digite o número da CTO" required>
+            </div>
+            <button type="submit" id="btnBuscarCTO" class="btn">Buscar</button>
+        </form>
+
+        <div class="result-box" id="resultadoCTO" style="display: none;">
+            <h3>Detalhes da CTO</h3>
+            <p id="tecnico"><span>Técnico:</span> </p>
+            <p id="data"><span>Data:</span> </p>
+            <p id="cidade"><span>Cidade:</span> </p>
+        </div>
+    </div>
+    <div style="position: absolute; top: 10px; right: 10px;">
+        <button class="btn" onclick="window.location.href='index.html'">Voltar</button>
+    </div>
+    <script type="module" src="./assets/js/main.js"></script>
+</body>
+</html>

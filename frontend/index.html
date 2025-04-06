@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
+    <form id="home">
+    <div class="menu">
+        <a href="tecnico.html">Cadastrar Técnico</a>
+        <a href="alterar-tecnico.html">Alterar Técnico</a>
+        <a href="cadastrar-cidade.html">Cadastrar Cidade</a>
+        <a href="consultar-ctos.html">Consultar CTOs</a>
+    </div>
     <div class="container">
         <h2>Controle de Numeração de CTO - Infraestrutura CN</h2>
         <div class="input-group">
@@ -30,6 +37,7 @@
             <option value="">Selecione uma cidade</option>
             </select>
         </div>
+    </form>
         <button class="btn" id="btnSalvarCTO">Salvar</button>
         
         <div class="result-box">
@@ -39,10 +47,6 @@
             <p id="datacto"><span>Data:</span> Nenhuma data armazenada ainda.</p>
             <p id="cidade"><span>Cidade:</span> Nenhuma cidade armazenada ainda.</p>
         </div>
-    </div>
-
-    <div style="position: absolute; top: 10px; right: 10px;">
-        <button class="btn" onclick="window.location.href='tecnico.html'">Cadastrar Técnico</button>
     </div>
 
     <script type="module" src="./assets/js/main.js"></script>
