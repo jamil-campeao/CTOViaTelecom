@@ -15,16 +15,18 @@ export const getCidades = async (req: Request, res: Response) => {
 
 //Rota para cadastrar cidade
 export const postCidade = async (req: Request, res: Response) => {
-    const { nome, estado, cep, cod_ibge } = req.body;
+    const { CID_NOME, CID_UF, CID_CEP, CID_IBGE } = req.body;
 
     // Validações
-    if (!nome || !estado || !cod_ibge) {
-        res.status(400).json({ error: 'Nome, estado e código IBGE são obrigatórios' });
+    if (!CID_NOME || !CID_UF || !CID_IBGE || !CID_CEP) {
+        res.status(400).json({ error: 'Nome, estado, código IBGE e CEP são obrigatórios' });
         return;
     }
 
-    const codigoIBGEExiste = await prisma.cidade.findFirstOrThrow({
-        where: { CID_IBGE: cod_ibge } // Verifica se o código IBGE já existe
+    const codigoIBGEExiste = await prisma.cidade.findFirst({
+        where: {
+            CID_IBGE: CID_IBGE // Verifica se o código IBGE já existe
+        }
     });
 
     if (codigoIBGEExiste) {
@@ -35,10 +37,10 @@ export const postCidade = async (req: Request, res: Response) => {
     try {
         const cidade = await prisma.cidade.create({
             data: {
-                CID_NOME: nome,
-                CID_UF: estado,
-                CID_CEP: cep,
-                CID_IBGE: cod_ibge
+                CID_NOME,
+                CID_UF,
+                CID_CEP,
+                CID_IBGE
             }
         });
 

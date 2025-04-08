@@ -108,3 +108,25 @@ export const getCTOByID = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Erro ao buscar CTO' });
     }
 };
+
+export const getCTO = async (req: Request, res: Response) => {
+    try {
+        const cto = await prisma.cTO.findMany({
+            include: {
+                tecnico: {
+                    select: {
+                        TEC_NOME: true
+                    }},
+                cidade: {select: {
+                    CID_NOME: true,
+                    CID_UF: true
+                }}
+            }
+        });
+
+        res.json(cto);
+    } catch (error) {
+        console.error('Erro ao buscar CTO:', error);
+        res.status(500).json({ error: 'Erro ao buscar CTO' });
+    }
+}

@@ -1,7 +1,7 @@
 model Tecnico {
-  TEC_CODIGO        Int      @id @default(autoincrement())
+  TEC_CODIGO    Int      @id @default(autoincrement())
   TEC_NOME      String
-  TEC_SITUACAO  Int
+  TEC_SITUACAO  String
 
   //Relacionamento
   cto CTO[] //Um técnico pode ter vários CTOs

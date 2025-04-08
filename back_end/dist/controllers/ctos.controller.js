@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCTOByID = exports.postCTO = exports.getUltimoCTO = void 0;
+exports.getCTO = exports.getCTOByID = exports.postCTO = exports.getUltimoCTO = void 0;
 const client_1 = __importDefault(require("../db/client"));
 //Rota para listar dados do ultimo CTO lançado
 const getUltimoCTO = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -121,3 +121,26 @@ const getCTOByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getCTOByID = getCTOByID;
+const getCTO = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const cto = yield client_1.default.cTO.findMany({
+            include: {
+                tecnico: {
+                    select: {
+                        TEC_NOME: true
+                    }
+                },
+                cidade: { select: {
+                        CID_NOME: true,
+                        CID_UF: true
+                    } }
+            }
+        });
+        res.json(cto);
+    }
+    catch (error) {
+        console.error('Erro ao buscar CTO:', error);
+        res.status(500).json({ error: 'Erro ao buscar CTO' });
+    }
+});
+exports.getCTO = getCTO;

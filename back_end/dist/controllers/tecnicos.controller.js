@@ -19,7 +19,7 @@ const getTecnicos = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const tecnicos = yield client_1.default.tecnico.findMany({
             where: {
-                TEC_SITUACAO: 1 // Situação ativa
+                TEC_SITUACAO: "Ativo"
             }
         });
         res.json(tecnicos);
@@ -32,18 +32,17 @@ const getTecnicos = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getTecnicos = getTecnicos;
 // Rota para cadastrar técnico
 const postTecnico = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { nome, situacao } = req.body;
+    const { TEC_NOME, TEC_SITUACAO } = req.body;
     // Validações
-    if (!nome || !situacao) {
+    if (!TEC_NOME || !TEC_SITUACAO) {
         res.status(400).json({ error: 'Nome e situação são obrigatórios' });
         return;
     }
-    let situacaoInt = parseInt(situacao);
     try {
         const tecnico = yield client_1.default.tecnico.create({
             data: {
-                TEC_NOME: nome,
-                TEC_SITUACAO: situacaoInt
+                TEC_NOME,
+                TEC_SITUACAO
             }
         });
         res.status(201).json(tecnico);
@@ -56,24 +55,17 @@ const postTecnico = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.postTecnico = postTecnico;
 const putTecnico = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { situacao } = req.body;
+    const { TEC_SITUACAO } = req.body;
     // Validações
-    if (!situacao) {
+    if (!TEC_SITUACAO) {
         res.status(400).json({ error: 'situação não informada' });
         return;
-    }
-    let situacaoInt;
-    if (situacao == "Ativo") {
-        situacaoInt = 1;
-    }
-    else {
-        situacaoInt = 0;
     }
     try {
         const tecnico = yield client_1.default.tecnico.update({
             where: { TEC_CODIGO: Number(id) },
             data: {
-                TEC_SITUACAO: situacaoInt
+                TEC_SITUACAO
             }
         });
         res.status(201).json({ sucess: true, message: 'Técnico atualizado com sucesso', tecnico });
