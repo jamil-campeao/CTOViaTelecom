@@ -1,53 +1,47 @@
-# Prisma PostgreSQL Project
+# Projeto ViaTelecom CTO
 
-This project demonstrates how to use Prisma with a PostgreSQL database hosted on Neon. It includes a basic setup for defining and creating tables in the database.
+Este projeto utiliza o Prisma com um banco de dados PostgreSQL hospedado no Neon.
 
-## Project Structure
+## Estrutura do Projeto
 
 ```
-prisma-postgres-project
 ├── prisma
-│   ├── schema.prisma      # Defines the Prisma schema for the database
+│   ├── schema.prisma      # Define o esquema Prisma para o banco de dados
 ├── src
-│   ├── index.ts           # Entry point of the application
+│   ├── index.ts           # Ponto de entrada da aplicação
 │   └── db
-│       └── client.ts      # Exports the Prisma client instance
-├── package.json            # npm configuration file
-├── tsconfig.json           # TypeScript configuration file
-└── README.md               # Project documentation
+│       └── client.ts      # Exporta a instância do cliente Prisma
+├── package.json            # Arquivo de configuração do npm
+├── tsconfig.json           # Arquivo de configuração do TypeScript
+└── README.md               # Documentação do projeto
 ```
 
-## Setup Instructions
+## Instruções de Configuração
 
-1. **Clone the repository:**
+1. **Clone o repositório:**
    ```bash
    git clone <repository-url>
-   cd prisma-postgres-project
+   cd ./backend
    ```
 
-2. **Install dependencies:**
+2. **Instale as dependências:**
    ```bash
    npm install
    ```
 
-3. **Set up the PostgreSQL database:**
-   - Create a PostgreSQL database on Neon and obtain the connection URL.
-   - Update the `DATABASE_URL` in the `.env` file (create this file if it doesn't exist) with your connection string.
+3. **Configure o banco de dados PostgreSQL:**
+   - Renomeie o arquivo .env.example para somente env
 
-4. **Run Prisma Migrate:**
+4. **Execute o Prisma Migrate:**
    ```bash
    npx prisma migrate dev --name init
    ```
 
-5. **Start the application:**
+5. **Inicie a aplicação:**
    ```bash
    npm run start
    ```
 
-## Usage Examples
+## Exemplos de Uso
 
-- You can interact with the database through the `src/index.ts` file, where you can add logic to create, read, update, or delete records.
-
-## License
-
-This project is licensed under the MIT License.
+- Você pode interagir com o banco de dados através do arquivo `src/index.ts`, onde pode adicionar lógica para criar, ler, atualizar ou deletar registros.
